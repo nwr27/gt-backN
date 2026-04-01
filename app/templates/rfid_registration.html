@@ -1,0 +1,430 @@
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pendaftaran User &amp; Kartu RFID</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --line: #334155;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #111827 50%, #1e293b 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .header {
+      margin-bottom: 22px;
+    }
+
+    .title {
+      font-size: 30px;
+      font-weight: 700;
+      margin: 0 0 8px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      background: rgba(17, 24, 39, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .card p.desc {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #0b1220;
+      color: var(--text);
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    input:focus {
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: #374151;
+      color: white;
+    }
+
+    .result {
+      margin-top: 18px;
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid transparent;
+      display: none;
+      white-space: pre-wrap;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .result.success {
+      background: rgba(22, 163, 74, 0.12);
+      border-color: rgba(22, 163, 74, 0.45);
+    }
+
+    .result.error {
+      background: rgba(220, 38, 38, 0.12);
+      border-color: rgba(220, 38, 38, 0.45);
+    }
+
+    .result.info {
+      background: rgba(37, 99, 235, 0.12);
+      border-color: rgba(37, 99, 235, 0.45);
+    }
+
+    .note {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(217, 119, 6, 0.12);
+      border: 1px solid rgba(217, 119, 6, 0.35);
+      color: #fde68a;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    code {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 class="title">Pendaftaran User &amp; Kartu RFID</h1>
+      <p class="subtitle">
+        Halaman ini langsung memakai endpoint yang sudah Anda buat, yaitu
+        <code>/api/accounts/register-rfid/</code> dan <code>/api/accounts/create-user-rfid/</code>.
+      </p>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Daftarkan Kartu ke User Existing</h2>
+        <p class="desc">Gunakan form ini jika akun user di <code>auth_user</code> sudah ada, lalu Anda hanya ingin
+          menempelkan kartu RFID ke user tersebut.</p>
+
+        <form id="registerCardForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="existing_user_id">User ID</label>
+              <input type="number" id="existing_user_id" name="user_id" placeholder="Contoh: 1">
+            </div>
+            <div class="form-group">
+              <label for="existing_username">Username</label>
+              <input type="text" id="existing_username" name="username" placeholder="Contoh: robot">
+            </div>
+            <div class="form-group full">
+              <label for="existing_rfid_user">RFID User</label>
+              <input type="text" id="existing_rfid_user" name="rfid_user" placeholder="Contoh: 0003572944" required="">
+            </div>
+            <div class="form-group">
+              <label for="existing_bagian">Bagian</label>
+              <input type="text" id="existing_bagian" name="bagian" placeholder="Contoh: robotics">
+            </div>
+            <div class="form-group">
+              <label for="existing_branch">Branch</label>
+              <input type="text" id="existing_branch" name="branch" placeholder="Contoh: gm1">
+            </div>
+            <div class="form-group">
+              <label for="existing_telegram">Telegram</label>
+              <input type="text" id="existing_telegram" name="telegram" placeholder="Contoh: 0851xxxx">
+            </div>
+            <div class="form-group">
+              <label for="existing_no_hp">No HP</label>
+              <input type="text" id="existing_no_hp" name="no_hp" placeholder="Contoh: 0851xxxx">
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn-primary">Daftarkan Kartu</button>
+            <button type="reset" class="btn-secondary">Reset</button>
+          </div>
+        </form>
+
+        <div id="registerCardResult" class="result"></div>
+      </section>
+
+      <section class="card">
+        <h2>Buat User Baru + Kartu RFID</h2>
+        <p class="desc">Gunakan form ini jika user belum ada. Sistem akan membuat data di <code>auth_user</code> dan
+          <code>accounts_userprofile</code> sekaligus.</p>
+
+        <form id="createUserForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="new_username">Username</label>
+              <input type="text" id="new_username" name="username" placeholder="Contoh: operator1" required="">
+            </div>
+            <div class="form-group">
+              <label for="new_password">Password</label>
+              <input type="password" id="new_password" name="password" placeholder="Minimal isi password" required="">
+            </div>
+            <div class="form-group">
+              <label for="new_first_name">First Name</label>
+              <input type="text" id="new_first_name" name="first_name" placeholder="Contoh: Budi">
+            </div>
+            <div class="form-group">
+              <label for="new_last_name">Last Name</label>
+              <input type="text" id="new_last_name" name="last_name" placeholder="Contoh: Santoso">
+            </div>
+            <div class="form-group full">
+              <label for="new_email">Email</label>
+              <input type="email" id="new_email" name="email" placeholder="Contoh: budi@example.com">
+            </div>
+            <div class="form-group full">
+              <label for="new_rfid_user">RFID User</label>
+              <input type="text" id="new_rfid_user" name="rfid_user" placeholder="Contoh: 0003529767" required="">
+            </div>
+            <div class="form-group">
+              <label for="new_bagian">Bagian</label>
+              <input type="text" id="new_bagian" name="bagian" placeholder="Contoh: sewing">
+            </div>
+            <div class="form-group">
+              <label for="new_branch">Branch</label>
+              <input type="text" id="new_branch" name="branch" placeholder="Contoh: gm1">
+            </div>
+            <div class="form-group">
+              <label for="new_telegram">Telegram</label>
+              <input type="text" id="new_telegram" name="telegram" placeholder="Contoh: 0812xxxx">
+            </div>
+            <div class="form-group">
+              <label for="new_no_hp">No HP</label>
+              <input type="text" id="new_no_hp" name="no_hp" placeholder="Contoh: 0812xxxx">
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn-primary">Buat User + Kartu</button>
+            <button type="reset" class="btn-secondary">Reset</button>
+          </div>
+        </form>
+
+        <div id="createUserResult" class="result"></div>
+      </section>
+    </div>
+
+    <div class="note">
+      Catatan: untuk form user existing, isi salah satu <b>User ID</b> atau <b>Username</b>. Tidak harus dua-duanya.
+    </div>
+  </div>
+
+  <script>
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    function showResult(elementId, type, data) {
+      const el = document.getElementById(elementId);
+      el.className = 'result show ' + type;
+      el.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+    }
+
+    async function postJson(url, payload, resultId) {
+      showResult(resultId, 'info', 'Memproses...');
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken') || ''
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showResult(resultId, 'success', data);
+        } else {
+          showResult(resultId, 'error', data);
+        }
+      } catch (error) {
+        showResult(resultId, 'error', {
+          success: false,
+          message: 'Request gagal',
+          detail: String(error)
+        });
+      }
+    }
+
+    document.getElementById('registerCardForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const payload = {
+        user_id: document.getElementById('existing_user_id').value || null,
+        username: document.getElementById('existing_username').value.trim(),
+        rfid_user: document.getElementById('existing_rfid_user').value.trim(),
+        bagian: document.getElementById('existing_bagian').value.trim(),
+        branch: document.getElementById('existing_branch').value.trim(),
+        telegram: document.getElementById('existing_telegram').value.trim(),
+        no_hp: document.getElementById('existing_no_hp').value.trim()
+      };
+
+      if (!payload.user_id && !payload.username) {
+        showResult('registerCardResult', 'error', {
+          success: false,
+          message: 'Isi User ID atau Username terlebih dahulu'
+        });
+        return;
+      }
+
+      postJson('/api/accounts/register-rfid/', payload, 'registerCardResult');
+    });
+
+    document.getElementById('createUserForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const payload = {
+        username: document.getElementById('new_username').value.trim(),
+        password: document.getElementById('new_password').value,
+        first_name: document.getElementById('new_first_name').value.trim(),
+        last_name: document.getElementById('new_last_name').value.trim(),
+        email: document.getElementById('new_email').value.trim(),
+        rfid_user: document.getElementById('new_rfid_user').value.trim(),
+        bagian: document.getElementById('new_bagian').value.trim(),
+        branch: document.getElementById('new_branch').value.trim(),
+        telegram: document.getElementById('new_telegram').value.trim(),
+        no_hp: document.getElementById('new_no_hp').value.trim()
+      };
+
+      postJson('/api/accounts/create-user-rfid/', payload, 'createUserResult');
+    });
+  </script>
+
+
+</body>
+
+</html>
