@@ -11,8 +11,7 @@ def root_redirect(request):
 urlpatterns = [
     path('', root_redirect, name='root'),
     path('admin/', admin.site.urls),
-    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('dashboard/', dashboard, name='dashboard'),
-    path('api/accounts/', include('accounts.urls')),
+    path('accounts/', include('accounts.urls')),
 ]

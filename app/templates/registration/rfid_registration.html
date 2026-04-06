@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Garment RFID Registration</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      background: #0d6efd;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0b5ed7;
+    }
+
+    .message {
+      padding: 10px;
+      margin-bottom: 16px;
+      border-radius: 8px;
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .errorlist {
+      color: red;
+      margin: 5px 0 0 0;
+      padding-left: 18px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Garment RFID Registration</h2>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="message">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="{{ form.rfid_garment.id_for_label }}">RFID Garment</label>
+        {{ form.rfid_garment }}
+        {{ form.rfid_garment.errors }}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.item.id_for_label }}">Item</label>
+        {{ form.item }}
+        {{ form.item.errors }}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.buyer.id_for_label }}">Buyer</label>
+        {{ form.buyer }}
+        {{ form.buyer.errors }}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.style.id_for_label }}">Style</label>
+        {{ form.style }}
+        {{ form.style.errors }}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.wo.id_for_label }}">WO</label>
+        {{ form.wo }}
+        {{ form.wo.errors }}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.color.id_for_label }}">Color</label>
+        {{ form.color }}
+        {{ form.color.errors }}
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.size.id_for_label }}">Size</label>
+        {{ form.size }}
+        {{ form.size.errors }}
+      </div>
+
+      <button type="submit">Save</button>
+    </form>
+  </div>
+</body>
+
+</html>
