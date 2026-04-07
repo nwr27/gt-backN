@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Waiting Dry Room</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 16px;
+    }
+
+    form {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    input,
+    button {
+      padding: 8px 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background: #f2f2f2;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Waiting Dry Room</h2>
+
+  <form method="get">
+    <input type="text" name="buyer" placeholder="Buyer" value="{{ request.GET.buyer }}">
+    <input type="text" name="style" placeholder="Style" value="{{ request.GET.style }}">
+    <input type="text" name="wo" placeholder="WO" value="{{ request.GET.wo }}">
+    <input type="text" name="line" placeholder="Line" value="{{ request.GET.line }}">
+    <button type="submit">Filter</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>RFID</th>
+        <th>Item</th>
+        <th>Buyer</th>
+        <th>Style</th>
+        <th>WO</th>
+        <th>Color</th>
+        <th>Size</th>
+        <th>Line</th>
+        <th>PQC Good</th>
+        <th>PQC Good Time</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for g in garments %}
+      <tr>
+        <td>{{ g.rfid_garment }}</td>
+        <td>{{ g.item }}</td>
+        <td>{{ g.buyer }}</td>
+        <td>{{ g.style }}</td>
+        <td>{{ g.wo }}</td>
+        <td>{{ g.color }}</td>
+        <td>{{ g.size }}</td>
+        <td>{{ g.line }}</td>
+        <td>{{ g.pqc_good }}</td>
+        <td>{{ g.pqc_good_time }}</td>
+        <td>Waiting Dry Room</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="11">No data found</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+
+</html>

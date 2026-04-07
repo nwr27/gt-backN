@@ -14,4 +14,5 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('dashboard/', dashboard, name='dashboard'),
     path('accounts/', include('accounts.urls')),
+    path('tracking/', include('tracking.urls')),
 ]
