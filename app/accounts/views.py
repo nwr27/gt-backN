@@ -28,4 +28,4 @@ def garment_rfid_registration(request):
     
 @login_required
 def rfid_registration_page(request):
-    return render(request, 'accounts/rfid_registration.html')
+    return render(request, 'accounts/user_rfid_registration.html')
