@@ -1,7 +1,9 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from accounts.models import Garment
 
 
+@login_required
 def waiting_dryroom_page(request):
     garments = Garment.objects.filter(pqc_good__gt=0, dryroom_ci=0).order_by("-pqc_good_time")
 
