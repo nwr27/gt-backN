@@ -12,7 +12,7 @@ from .models import UserProfile
 
 @login_required
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    return render(request, 'accounts/dashboard.html')
 
 def garment_rfid_registration(request):
     if request.method == "POST":
@@ -24,8 +24,8 @@ def garment_rfid_registration(request):
     else:
         form = GarmentRegistrationForm()
 
-    return render(request, "registration/rfid_registration.html", {"form": form})
+    return render(request, "accounts/garment_rfid_registration.html", {"form": form})
     
 @login_required
 def rfid_registration_page(request):
-    return render(request, 'rfid_registration.html')
+    return render(request, 'accounts/rfid_registration.html')

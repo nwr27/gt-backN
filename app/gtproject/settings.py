@@ -17,9 +17,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "accounts.apps.AccountsConfig",
     "rest_framework",
     "rest_framework_api_key",
+    "accounts.apps.AccountsConfig",
     "tracking",
 ]
 
@@ -37,7 +37,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
 ]
 
 ROOT_URLCONF = "gtproject.urls"
@@ -80,10 +79,11 @@ TIME_ZONE = "Asia/Jakarta"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/dashboard/"
 LOGOUT_REDIRECT_URL = "/login/"
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
