@@ -1,0 +1,63 @@
+{% extends "base/base.html" %}
+
+{% block title %}Waiting Folding{% endblock %}
+
+{% block content %}
+<div class="page">
+  <div class="card">
+    <h2>Waiting Folding</h2>
+
+    <form method="get" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
+      <input type="text" name="rfid_garment" placeholder="RFID Garment" value="{{ request.GET.rfid_garment }}">
+      <input type="text" name="buyer" placeholder="Buyer" value="{{ request.GET.buyer }}">
+      <input type="text" name="style" placeholder="Style" value="{{ request.GET.style }}">
+      <input type="text" name="wo" placeholder="WO" value="{{ request.GET.wo }}">
+      <input type="text" name="color" placeholder="Color" value="{{ request.GET.color }}">
+      <input type="text" name="size" placeholder="Size" value="{{ request.GET.size }}">
+      <input type="text" name="line" placeholder="Line" value="{{ request.GET.line }}">
+      <button type="submit" class="btn">Filter</button>
+    </form>
+
+    <table style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th>RFID</th>
+          <th>Item</th>
+          <th>Buyer</th>
+          <th>Style</th>
+          <th>WO</th>
+          <th>Color</th>
+          <th>Size</th>
+          <th>Line</th>
+          <th>Dry Room CO</th>
+          <th>Dry Room CO Time</th>
+          <th>Folding CI</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for g in garments %}
+        <tr>
+          <td>{{ g.rfid_garment }}</td>
+          <td>{{ g.item }}</td>
+          <td>{{ g.buyer }}</td>
+          <td>{{ g.style }}</td>
+          <td>{{ g.wo }}</td>
+          <td>{{ g.color }}</td>
+          <td>{{ g.size }}</td>
+          <td>{{ g.line }}</td>
+          <td>{{ g.dryroom_co }}</td>
+          <td>{{ g.dryroom_co_time }}</td>
+          <td>{{ g.folding_ci }}</td>
+          <td>Waiting Folding</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="12">No data found</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
