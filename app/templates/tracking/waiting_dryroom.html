@@ -1,20 +1,26 @@
 {% extends "base/base.html" %}
+{% load static %}
 
 {% block title %}Waiting Dry Room{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tracking.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="page">
-  <div class="card">
-    <h2>Waiting Dry Room</h2>
+<h1 class="page-title">Waiting Dry Room</h1>
+<p class="page-subtitle">Garment yang sudah PQC Good dan belum masuk Dry Room.</p>
 
-    <form method="get">
-      <input type="text" name="buyer" placeholder="Buyer" value="{{ request.GET.buyer }}">
-      <input type="text" name="style" placeholder="Style" value="{{ request.GET.style }}">
-      <input type="text" name="wo" placeholder="WO" value="{{ request.GET.wo }}">
-      <input type="text" name="line" placeholder="Line" value="{{ request.GET.line }}">
-      <button type="submit" class="btn">Filter</button>
-    </form>
+<div class="card">
+  <form method="get" class="inline-filter">
+    <input type="text" name="buyer" placeholder="Buyer" value="{{ request.GET.buyer }}">
+    <input type="text" name="style" placeholder="Style" value="{{ request.GET.style }}">
+    <input type="text" name="wo" placeholder="WO" value="{{ request.GET.wo }}">
+    <input type="text" name="line" placeholder="Line" value="{{ request.GET.line }}">
+    <button type="submit">Filter</button>
+  </form>
 
+  <div class="table-wrap">
     <table>
       <thead>
         <tr>
@@ -44,7 +50,7 @@
           <td>{{ g.line }}</td>
           <td>{{ g.pqc_good }}</td>
           <td>{{ g.pqc_good_time }}</td>
-          <td>Waiting Dry Room</td>
+          <td><span class="badge status-waiting">Waiting Dry Room</span></td>
         </tr>
         {% empty %}
         <tr>

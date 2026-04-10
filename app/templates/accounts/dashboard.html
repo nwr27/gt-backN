@@ -1,11 +1,45 @@
 {% extends "base/base.html" %}
+{% load static %}
 
 {% block title %}Dashboard{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="card">
-  <h1>Selamat datang, {{ request.user.username }}</h1>
-  <p>Login Django sederhana sudah berhasil.</p>
-  <a href="{% url 'logout' %}">Logout</a>
+<h1 class="page-title">Dashboard</h1>
+<p class="page-subtitle">Selamat datang, {{ request.user.username }}.</p>
+
+<div class="dashboard-links">
+  <a class="dashboard-link-card" href="{% url 'user_rfid_register' %}">
+    <h3>User RFID Registration</h3>
+    <p>Registrasi kartu RFID untuk user existing atau user baru.</p>
+  </a>
+
+  <a class="dashboard-link-card" href="{% url 'garment_rfid_register' %}">
+    <h3>Garment RFID Registration</h3>
+    <p>Registrasi master garment RFID ke database.</p>
+  </a>
+
+  <a class="dashboard-link-card" href="{% url 'waiting_dryroom_page' %}">
+    <h3>Waiting Dry Room</h3>
+    <p>Monitoring garment yang sudah PQC Good dan menunggu Dry Room.</p>
+  </a>
+
+  <a class="dashboard-link-card" href="{% url 'waiting_folding_page' %}">
+    <h3>Waiting Folding</h3>
+    <p>Monitoring garment yang sudah keluar Dry Room dan menunggu Folding.</p>
+  </a>
+
+  <a class="dashboard-link-card" href="{% url 'dryroom_transaction_page' %}">
+    <h3>Dry Room Transaction</h3>
+    <p>Transaksi check in dan check out Dry Room.</p>
+  </a>
+
+  <a class="dashboard-link-card" href="{% url 'folding_transaction_page' %}">
+    <h3>Folding Transaction</h3>
+    <p>Transaksi check in dan check out Folding.</p>
+  </a>
 </div>
 {% endblock %}

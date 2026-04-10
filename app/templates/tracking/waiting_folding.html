@@ -1,24 +1,30 @@
 {% extends "base/base.html" %}
+{% load static %}
 
 {% block title %}Waiting Folding{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tracking.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="page">
-  <div class="card">
-    <h2>Waiting Folding</h2>
+<h1 class="page-title">Waiting Folding</h1>
+<p class="page-subtitle">Garment yang sudah keluar Dry Room dan belum masuk Folding.</p>
 
-    <form method="get" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
-      <input type="text" name="rfid_garment" placeholder="RFID Garment" value="{{ request.GET.rfid_garment }}">
-      <input type="text" name="buyer" placeholder="Buyer" value="{{ request.GET.buyer }}">
-      <input type="text" name="style" placeholder="Style" value="{{ request.GET.style }}">
-      <input type="text" name="wo" placeholder="WO" value="{{ request.GET.wo }}">
-      <input type="text" name="color" placeholder="Color" value="{{ request.GET.color }}">
-      <input type="text" name="size" placeholder="Size" value="{{ request.GET.size }}">
-      <input type="text" name="line" placeholder="Line" value="{{ request.GET.line }}">
-      <button type="submit" class="btn">Filter</button>
-    </form>
+<div class="card">
+  <form method="get" class="inline-filter">
+    <input type="text" name="rfid_garment" placeholder="RFID Garment" value="{{ request.GET.rfid_garment }}">
+    <input type="text" name="buyer" placeholder="Buyer" value="{{ request.GET.buyer }}">
+    <input type="text" name="style" placeholder="Style" value="{{ request.GET.style }}">
+    <input type="text" name="wo" placeholder="WO" value="{{ request.GET.wo }}">
+    <input type="text" name="color" placeholder="Color" value="{{ request.GET.color }}">
+    <input type="text" name="size" placeholder="Size" value="{{ request.GET.size }}">
+    <input type="text" name="line" placeholder="Line" value="{{ request.GET.line }}">
+    <button type="submit">Filter</button>
+  </form>
 
-    <table style="width:100%; border-collapse:collapse;">
+  <div class="table-wrap">
+    <table>
       <thead>
         <tr>
           <th>RFID</th>
@@ -49,7 +55,7 @@
           <td>{{ g.dryroom_co }}</td>
           <td>{{ g.dryroom_co_time }}</td>
           <td>{{ g.folding_ci }}</td>
-          <td>Waiting Folding</td>
+          <td><span class="badge status-waiting">Waiting Folding</span></td>
         </tr>
         {% empty %}
         <tr>

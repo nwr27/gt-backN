@@ -1,229 +1,207 @@
+{% extends "base/base.html" %}
 {% load static %}
-<html lang="id">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pendaftaran User &amp; Kartu RFID</title>
-</head>
+{% block title %}User RFID Registration{% endblock %}
 
-<body>
-  <div class="container">
-    <div class="header">
-      <h1 class="title">Pendaftaran User &amp; Kartu RFID</h1>
-      <p class="subtitle">
-        Halaman ini langsung memakai endpoint yang sudah Anda buat, yaitu
-        <code>/api/accounts/register-rfid/</code> dan <code>/api/accounts/create-user-rfid/</code>.
-      </p>
-    </div>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+{% endblock %}
 
-    <div class="grid">
-      <section class="card">
-        <h2>Daftarkan Kartu ke User Existing</h2>
-        <p class="desc">Gunakan form ini jika akun user di <code>auth_user</code> sudah ada, lalu Anda hanya ingin
-          menempelkan kartu RFID ke user tersebut.</p>
+{% block content %}
+<h1 class="page-title">Pendaftaran User & Kartu RFID</h1>
+<p class="page-subtitle">
+  Halaman ini dipakai untuk menghubungkan kartu RFID ke user existing atau membuat user baru sekaligus.
+</p>
 
-        <form id="registerCardForm">
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="existing_user_id">User ID</label>
-              <input type="number" id="existing_user_id" name="user_id" placeholder="Contoh: 1">
-            </div>
-            <div class="form-group">
-              <label for="existing_username">Username</label>
-              <input type="text" id="existing_username" name="username" placeholder="Contoh: robot">
-            </div>
-            <div class="form-group full">
-              <label for="existing_rfid_user">RFID User</label>
-              <input type="text" id="existing_rfid_user" name="rfid_user" placeholder="Contoh: 0003572944" required="">
-            </div>
-            <div class="form-group">
-              <label for="existing_bagian">Bagian</label>
-              <input type="text" id="existing_bagian" name="bagian" placeholder="Contoh: robotics">
-            </div>
-            <div class="form-group">
-              <label for="existing_branch">Branch</label>
-              <input type="text" id="existing_branch" name="branch" placeholder="Contoh: gm1">
-            </div>
-            <div class="form-group">
-              <label for="existing_telegram">Telegram</label>
-              <input type="text" id="existing_telegram" name="telegram" placeholder="Contoh: 0851xxxx">
-            </div>
-            <div class="form-group">
-              <label for="existing_no_hp">No HP</label>
-              <input type="text" id="existing_no_hp" name="no_hp" placeholder="Contoh: 0851xxxx">
-            </div>
-          </div>
+<div class="grid-2">
+  <section class="card">
+    <h2>Daftarkan Kartu ke User Existing</h2>
+    <p class="small-muted">Isi salah satu User ID atau Username.</p>
 
-          <div class="actions">
-            <button type="submit" class="btn-primary">Daftarkan Kartu</button>
-            <button type="reset" class="btn-secondary">Reset</button>
-          </div>
-        </form>
+    <form id="registerCardForm">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="existing_user_id">User ID</label>
+          <input type="number" id="existing_user_id" name="user_id" placeholder="Contoh: 1">
+        </div>
+        <div class="form-group">
+          <label for="existing_username">Username</label>
+          <input type="text" id="existing_username" name="username" placeholder="Contoh: robot">
+        </div>
+        <div class="form-group full">
+          <label for="existing_rfid_user">RFID User</label>
+          <input type="text" id="existing_rfid_user" name="rfid_user" placeholder="Contoh: 0003572944" required>
+        </div>
+        <div class="form-group">
+          <label for="existing_bagian">Bagian</label>
+          <input type="text" id="existing_bagian" name="bagian">
+        </div>
+        <div class="form-group">
+          <label for="existing_branch">Branch</label>
+          <input type="text" id="existing_branch" name="branch">
+        </div>
+        <div class="form-group">
+          <label for="existing_telegram">Telegram</label>
+          <input type="text" id="existing_telegram" name="telegram">
+        </div>
+        <div class="form-group">
+          <label for="existing_no_hp">No HP</label>
+          <input type="text" id="existing_no_hp" name="no_hp">
+        </div>
+      </div>
 
-        <div id="registerCardResult" class="result"></div>
-      </section>
+      <div class="actions">
+        <button type="submit">Daftarkan Kartu</button>
+        <button type="reset" class="btn-secondary">Reset</button>
+      </div>
+    </form>
 
-      <section class="card">
-        <h2>Buat User Baru + Kartu RFID</h2>
-        <p class="desc">Gunakan form ini jika user belum ada. Sistem akan membuat data di <code>auth_user</code> dan
-          <code>accounts_userprofile</code> sekaligus.</p>
+    <pre id="registerCardResult" class="result-box"></pre>
+  </section>
 
-        <form id="createUserForm">
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="new_username">Username</label>
-              <input type="text" id="new_username" name="username" placeholder="Contoh: operator1" required="">
-            </div>
-            <div class="form-group">
-              <label for="new_password">Password</label>
-              <input type="password" id="new_password" name="password" placeholder="Minimal isi password" required="">
-            </div>
-            <div class="form-group">
-              <label for="new_first_name">First Name</label>
-              <input type="text" id="new_first_name" name="first_name" placeholder="Contoh: Budi">
-            </div>
-            <div class="form-group">
-              <label for="new_last_name">Last Name</label>
-              <input type="text" id="new_last_name" name="last_name" placeholder="Contoh: Santoso">
-            </div>
-            <div class="form-group full">
-              <label for="new_email">Email</label>
-              <input type="email" id="new_email" name="email" placeholder="Contoh: budi@example.com">
-            </div>
-            <div class="form-group full">
-              <label for="new_rfid_user">RFID User</label>
-              <input type="text" id="new_rfid_user" name="rfid_user" placeholder="Contoh: 0003529767" required="">
-            </div>
-            <div class="form-group">
-              <label for="new_bagian">Bagian</label>
-              <input type="text" id="new_bagian" name="bagian" placeholder="Contoh: sewing">
-            </div>
-            <div class="form-group">
-              <label for="new_branch">Branch</label>
-              <input type="text" id="new_branch" name="branch" placeholder="Contoh: gm1">
-            </div>
-            <div class="form-group">
-              <label for="new_telegram">Telegram</label>
-              <input type="text" id="new_telegram" name="telegram" placeholder="Contoh: 0812xxxx">
-            </div>
-            <div class="form-group">
-              <label for="new_no_hp">No HP</label>
-              <input type="text" id="new_no_hp" name="no_hp" placeholder="Contoh: 0812xxxx">
-            </div>
-          </div>
+  <section class="card">
+    <h2>Buat User Baru + Kartu RFID</h2>
+    <p class="small-muted">Membuat data auth user dan profile sekaligus.</p>
 
-          <div class="actions">
-            <button type="submit" class="btn-primary">Buat User + Kartu</button>
-            <button type="reset" class="btn-secondary">Reset</button>
-          </div>
-        </form>
+    <form id="createUserForm">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="new_username">Username</label>
+          <input type="text" id="new_username" name="username" required>
+        </div>
+        <div class="form-group">
+          <label for="new_password">Password</label>
+          <input type="password" id="new_password" name="password" required>
+        </div>
+        <div class="form-group">
+          <label for="new_first_name">First Name</label>
+          <input type="text" id="new_first_name" name="first_name">
+        </div>
+        <div class="form-group">
+          <label for="new_last_name">Last Name</label>
+          <input type="text" id="new_last_name" name="last_name">
+        </div>
+        <div class="form-group full">
+          <label for="new_email">Email</label>
+          <input type="email" id="new_email" name="email">
+        </div>
+        <div class="form-group full">
+          <label for="new_rfid_user">RFID User</label>
+          <input type="text" id="new_rfid_user" name="rfid_user" required>
+        </div>
+        <div class="form-group">
+          <label for="new_bagian">Bagian</label>
+          <input type="text" id="new_bagian" name="bagian">
+        </div>
+        <div class="form-group">
+          <label for="new_branch">Branch</label>
+          <input type="text" id="new_branch" name="branch">
+        </div>
+        <div class="form-group">
+          <label for="new_telegram">Telegram</label>
+          <input type="text" id="new_telegram" name="telegram">
+        </div>
+        <div class="form-group">
+          <label for="new_no_hp">No HP</label>
+          <input type="text" id="new_no_hp" name="no_hp">
+        </div>
+      </div>
 
-        <div id="createUserResult" class="result"></div>
-      </section>
-    </div>
+      <div class="actions">
+        <button type="submit">Buat User + Kartu</button>
+        <button type="reset" class="btn-secondary">Reset</button>
+      </div>
+    </form>
 
-    <div class="note">
-      Catatan: untuk form user existing, isi salah satu <b>User ID</b> atau <b>Username</b>. Tidak harus dua-duanya.
-    </div>
-  </div>
+    <pre id="createUserResult" class="result-box"></pre>
+  </section>
+</div>
+{% endblock %}
 
-  <script>
-    function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
-          }
+{% block extra_js %}
+<script>
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
         }
       }
-      return cookieValue;
+    }
+    return cookieValue;
+  }
+
+  function showResult(elementId, data) {
+    const el = document.getElementById(elementId);
+    el.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+  }
+
+  async function postJson(url, payload, resultId) {
+    showResult(resultId, "Memproses...");
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken") || ""
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+      showResult(resultId, data);
+    } catch (error) {
+      showResult(resultId, {
+        success: false,
+        message: "Request gagal",
+        detail: String(error)
+      });
+    }
+  }
+
+  document.getElementById("registerCardForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const payload = {
+      user_id: document.getElementById("existing_user_id").value || null,
+      username: document.getElementById("existing_username").value.trim(),
+      rfid_user: document.getElementById("existing_rfid_user").value.trim(),
+      bagian: document.getElementById("existing_bagian").value.trim(),
+      branch: document.getElementById("existing_branch").value.trim(),
+      telegram: document.getElementById("existing_telegram").value.trim(),
+      no_hp: document.getElementById("existing_no_hp").value.trim()
+    };
+
+    if (!payload.user_id && !payload.username) {
+      showResult("registerCardResult", {
+        success: false,
+        message: "Isi User ID atau Username terlebih dahulu"
+      });
+      return;
     }
 
-    function showResult(elementId, type, data) {
-      const el = document.getElementById(elementId);
-      el.className = 'result show ' + type;
-      el.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
-    }
+    postJson("/api/accounts/register-rfid/", payload, "registerCardResult");
+  });
 
-    async function postJson(url, payload, resultId) {
-      showResult(resultId, 'info', 'Memproses...');
+  document.getElementById("createUserForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const payload = {
+      username: document.getElementById("new_username").value.trim(),
+      password: document.getElementById("new_password").value,
+      first_name: document.getElementById("new_first_name").value.trim(),
+      last_name: document.getElementById("new_last_name").value.trim(),
+      email: document.getElementById("new_email").value.trim(),
+      rfid_user: document.getElementById("new_rfid_user").value.trim(),
+      bagian: document.getElementById("new_bagian").value.trim(),
+      branch: document.getElementById("new_branch").value.trim(),
+      telegram: document.getElementById("new_telegram").value.trim(),
+      no_hp: document.getElementById("new_no_hp").value.trim()
+    };
 
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken') || ''
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          showResult(resultId, 'success', data);
-        } else {
-          showResult(resultId, 'error', data);
-        }
-      } catch (error) {
-        showResult(resultId, 'error', {
-          success: false,
-          message: 'Request gagal',
-          detail: String(error)
-        });
-      }
-    }
-
-    document.getElementById('registerCardForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const payload = {
-        user_id: document.getElementById('existing_user_id').value || null,
-        username: document.getElementById('existing_username').value.trim(),
-        rfid_user: document.getElementById('existing_rfid_user').value.trim(),
-        bagian: document.getElementById('existing_bagian').value.trim(),
-        branch: document.getElementById('existing_branch').value.trim(),
-        telegram: document.getElementById('existing_telegram').value.trim(),
-        no_hp: document.getElementById('existing_no_hp').value.trim()
-      };
-
-      if (!payload.user_id && !payload.username) {
-        showResult('registerCardResult', 'error', {
-          success: false,
-          message: 'Isi User ID atau Username terlebih dahulu'
-        });
-        return;
-      }
-
-      postJson('/api/accounts/register-rfid/', payload, 'registerCardResult');
-    });
-
-    document.getElementById('createUserForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const payload = {
-        username: document.getElementById('new_username').value.trim(),
-        password: document.getElementById('new_password').value,
-        first_name: document.getElementById('new_first_name').value.trim(),
-        last_name: document.getElementById('new_last_name').value.trim(),
-        email: document.getElementById('new_email').value.trim(),
-        rfid_user: document.getElementById('new_rfid_user').value.trim(),
-        bagian: document.getElementById('new_bagian').value.trim(),
-        branch: document.getElementById('new_branch').value.trim(),
-        telegram: document.getElementById('new_telegram').value.trim(),
-        no_hp: document.getElementById('new_no_hp').value.trim()
-      };
-
-      postJson('/api/accounts/create-user-rfid/', payload, 'createUserResult');
-    });
-  </script>
-
-
-</body>
-
-</html>
+    postJson("/api/accounts/create-user-rfid/", payload, "createUserResult");
+  });
+</script>
+{% endblock %}

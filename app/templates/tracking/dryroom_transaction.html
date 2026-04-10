@@ -1,0 +1,49 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Dry Room Transaction{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tracking.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Dry Room Transaction</h1>
+<p class="page-subtitle">Proses check in dan check out garment di area Dry Room.</p>
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-success" data-autohide="true">{{ message }}</div>
+{% endfor %}
+{% endif %}
+
+<div class="grid-2">
+  <div class="card transaction-card">
+    <h3>Dry Room Check In</h3>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="checkin">
+      <div class="form-group">
+        <label>RFID Garment</label>
+        <input type="text" name="rfid_garment" placeholder="Scan / input RFID garment" autofocus>
+      </div>
+      <button type="submit">Submit Check In</button>
+      <div class="status-note">Syarat: PQC Good sudah ada dan belum pernah Dry Room Check In.</div>
+    </form>
+  </div>
+
+  <div class="card transaction-card">
+    <h3>Dry Room Check Out</h3>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="checkout">
+      <div class="form-group">
+        <label>RFID Garment</label>
+        <input type="text" name="rfid_garment" placeholder="Scan / input RFID garment">
+      </div>
+      <button type="submit">Submit Check Out</button>
+      <div class="status-note">Syarat: sudah Dry Room Check In dan belum pernah Dry Room Check Out.</div>
+    </form>
+  </div>
+</div>
+{% endblock %}

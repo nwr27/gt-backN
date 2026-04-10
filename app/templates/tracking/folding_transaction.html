@@ -1,0 +1,49 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Folding Transaction{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tracking.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Folding Transaction</h1>
+<p class="page-subtitle">Proses check in dan check out garment di area Folding.</p>
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-success" data-autohide="true">{{ message }}</div>
+{% endfor %}
+{% endif %}
+
+<div class="grid-2">
+  <div class="card transaction-card">
+    <h3>Folding Check In</h3>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="checkin">
+      <div class="form-group">
+        <label>RFID Garment</label>
+        <input type="text" name="rfid_garment" placeholder="Scan / input RFID garment" autofocus>
+      </div>
+      <button type="submit">Submit Check In</button>
+      <div class="status-note">Syarat: garment sudah keluar Dry Room dan belum Folding Check In.</div>
+    </form>
+  </div>
+
+  <div class="card transaction-card">
+    <h3>Folding Check Out</h3>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="checkout">
+      <div class="form-group">
+        <label>RFID Garment</label>
+        <input type="text" name="rfid_garment" placeholder="Scan / input RFID garment">
+      </div>
+      <button type="submit">Submit Check Out</button>
+      <div class="status-note">Syarat: garment sudah Folding Check In dan belum Folding Check Out.</div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,26 +1,26 @@
+{% extends "base/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Garment RFID Registration</title>
-  </head>
+{% block title %}Garment RFID Registration{% endblock %}
 
-<body>
-  <div class="container">
-    <h2>Garment RFID Registration</h2>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+{% endblock %}
 
-    {% if messages %}
-    {% for message in messages %}
-    <div class="message">{{ message }}</div>
-    {% endfor %}
-    {% endif %}
+{% block content %}
+<h1 class="page-title">Garment RFID Registration</h1>
+<p class="page-subtitle">Input master garment RFID ke database.</p>
 
-    <form method="post">
-      {% csrf_token %}
+<div class="card">
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-success" data-autohide="true">{{ message }}</div>
+  {% endfor %}
+  {% endif %}
 
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-grid">
       <div class="form-group">
         <label for="{{ form.rfid_garment.id_for_label }}">RFID Garment</label>
         {{ form.rfid_garment }}
@@ -62,10 +62,11 @@
         {{ form.size }}
         {{ form.size.errors }}
       </div>
+    </div>
 
+    <div class="actions">
       <button type="submit">Save</button>
-    </form>
-  </div>
-</body>
-
-</html>
+    </div>
+  </form>
+</div>
+{% endblock %}
