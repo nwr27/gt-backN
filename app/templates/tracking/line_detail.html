@@ -1,0 +1,71 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Data Line {{ line }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tracking.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-head-inline">
+  <div>
+    <h1 class="page-title">Data Line {{ line }}</h1>
+    <p class="page-subtitle">Ringkasan metrik line {{ line }} untuk monitoring QC dan PQC.</p>
+  </div>
+  <div>
+    <a href="{% url 'line_overview_page' %}" class="btn btn-secondary">Kembali ke Semua Line</a>
+  </div>
+</div>
+
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="metric-label">Sewing Output</div>
+    <div class="metric-value">{{ summary.sewing_output }}</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-label">Reject QC</div>
+    <div class="metric-value">{{ summary.reject_qc }}</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-label">Rework QC</div>
+    <div class="metric-value">{{ summary.rework_qc }}</div>
+    <div class="metric-note">Jumlah garment unik yang pernah rework</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-label">WIRA QC</div>
+    <div class="metric-value">{{ summary.wira_qc }}</div>
+    <div class="metric-note">Rework yang belum dieksekusi good / reject</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-label">Good QC</div>
+    <div class="metric-value">{{ summary.good_qc }}</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-label">Reject PQC</div>
+    <div class="metric-value">{{ summary.reject_pqc }}</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-label">Rework PQC</div>
+    <div class="metric-value">{{ summary.rework_pqc }}</div>
+    <div class="metric-note">Jumlah garment unik yang pernah rework</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-label">WIRA PQC</div>
+    <div class="metric-value">{{ summary.wira_pqc }}</div>
+    <div class="metric-note">Rework yang belum dieksekusi good / reject</div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-label">Good PQC</div>
+    <div class="metric-value">{{ summary.good_pqc }}</div>
+  </div>
+</div>
+{% endblock %}

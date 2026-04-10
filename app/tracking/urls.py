@@ -9,6 +9,9 @@ urlpatterns = [
     path("dryroom/", views.dryroom_transaction_page, name="dryroom_transaction_page"),
     path("folding/", views.folding_transaction_page, name="folding_transaction_page"),
     
+    path("lines/", views.line_overview_page, name="line_overview_page"),
+    path("lines/<str:line>/", views.line_detail_page, name="line_detail_page"),
+    
     path("api/waiting-dryroom/", api_views.get_garment_waiting_dryroom, name="api_waiting_dryroom"),
     path("api/waiting-folding/", api_views.get_garment_waiting_folding, name="api_waiting_folding"),
     

@@ -2,8 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from accounts.models import Garment
 from django.contrib import messages
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.utils import timezone
+from django.db.models import Count, Q
 
 
 @login_required
@@ -145,3 +146,50 @@ def folding_transaction_page(request):
         return redirect("folding_transaction_page")
 
     return render(request, "tracking/folding_transaction.html")
+
+
+@login_required
+def line_overview_page(request):
+    lines = (
+        Garment.objects.exclude(line__isnull=True)
+        .exclude(line__exact="")
+        .values("line")
+        .annotate(
+            sewing_output=Count("id_garment", filter=Q(output__gt=0)),
+            good_qc=Count("id_garment", filter=Q(qc_good__gt=0)),
+            reject_qc=Count("id_garment", filter=Q(qc_reject__gt=0)),
+            rework_qc=Count("id_garment", filter=Q(qc_rework__gt=0)),
+            wira_qc=Count("id_garment", filter=Q(qc_rework__gt=0) & Q(qc_good=0) & Q(qc_reject=0)),
+            good_pqc=Count("id_garment", filter=Q(pqc_good__gt=0)),
+            reject_pqc=Count("id_garment", filter=Q(pqc_reject__gt=0)),
+            rework_pqc=Count("id_garment", filter=Q(pqc_rework__gt=0)),
+            wira_pqc=Count("id_garment", filter=Q(pqc_rework__gt=0) & Q(pqc_good=0) & Q(pqc_reject=0)),
+        )
+        .order_by("line")
+    )
+
+    context = {"lines": lines}
+    return render(request, "tracking/line_overview.html", context)
+
+
+@login_required
+def line_detail_page(request, line):
+    garments = Garment.objects.filter(line=line)
+
+    summary = garments.aggregate(
+        sewing_output=Count("id_garment", filter=Q(output__gt=0)),
+        good_qc=Count("id_garment", filter=Q(qc_good__gt=0)),
+        reject_qc=Count("id_garment", filter=Q(qc_reject__gt=0)),
+        rework_qc=Count("id_garment", filter=Q(qc_rework__gt=0)),
+        wira_qc=Count("id_garment", filter=Q(qc_rework__gt=0) & Q(qc_good=0) & Q(qc_reject=0)),
+        good_pqc=Count("id_garment", filter=Q(pqc_good__gt=0)),
+        reject_pqc=Count("id_garment", filter=Q(pqc_reject__gt=0)),
+        rework_pqc=Count("id_garment", filter=Q(pqc_rework__gt=0)),
+        wira_pqc=Count("id_garment", filter=Q(pqc_rework__gt=0) & Q(pqc_good=0) & Q(pqc_reject=0)),
+    )
+
+    context = {
+        "line": line,
+        "summary": summary,
+    }
+    return render(request, "tracking/line_detail.html", context)

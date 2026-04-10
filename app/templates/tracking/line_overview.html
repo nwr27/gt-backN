@@ -1,0 +1,43 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Production Lines{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tracking.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Production Lines</h1>
+<p class="page-subtitle">Pilih line untuk melihat ringkasan QC dan PQC per line.</p>
+
+<div class="line-grid">
+  {% for row in lines %}
+  <a href="{% url 'line_detail_page' row.line %}" class="line-card">
+    <div class="line-card-top">
+      <span class="line-chip">Line {{ row.line }}</span>
+    </div>
+
+    <h3>Production Line {{ row.line }}</h3>
+
+    <div class="line-mini-stats line-mini-stats-3">
+      <div><span>Output</span><strong>{{ row.sewing_output }}</strong></div>
+      <div><span>Good QC</span><strong>{{ row.good_qc }}</strong></div>
+      <div><span>Reject QC</span><strong>{{ row.reject_qc }}</strong></div>
+
+      <div><span>Rework QC</span><strong>{{ row.rework_qc }}</strong></div>
+      <div><span>WIRA QC</span><strong>{{ row.wira_qc }}</strong></div>
+      <div><span>Good PQC</span><strong>{{ row.good_pqc }}</strong></div>
+
+      <div><span>Reject PQC</span><strong>{{ row.reject_pqc }}</strong></div>
+      <div><span>Rework PQC</span><strong>{{ row.rework_pqc }}</strong></div>
+      <div><span>WIRA PQC</span><strong>{{ row.wira_pqc }}</strong></div>
+    </div>
+  </a>
+  {% empty %}
+  <div class="card">
+    <p>Tidak ada data line.</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
