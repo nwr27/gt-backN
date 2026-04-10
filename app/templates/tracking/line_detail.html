@@ -19,53 +19,100 @@
 </div>
 
 <div class="metrics-grid">
-  <div class="metric-card">
+  <button type="button" class="metric-card metric-button {% if summary.sewing_output == 0 %}metric-disabled{% endif %}"
+    {% if summary.sewing_output > 0 %} onclick="openModal('modal-sewing-output')"{% else %}disabled{% endif %}>
     <div class="metric-label">Sewing Output</div>
     <div class="metric-value">{{ summary.sewing_output }}</div>
-  </div>
+  </button>
 
-  <div class="metric-card">
+  <button type="button" class="metric-card metric-button {% if summary.reject_qc == 0 %}metric-disabled{% endif %}"
+  {% if summary.reject_qc > 0 %}onclick="openModal('modal-reject-qc')"{% else %}disabled{% endif %}>
     <div class="metric-label">Reject QC</div>
     <div class="metric-value">{{ summary.reject_qc }}</div>
-  </div>
+  </button>
 
-  <div class="metric-card">
+  <button type="button" class="metric-card metric-button {% if summary.rework_qc == 0 %}metric-disabled{% endif %}"
+  {% if summary.rework_qc > 0 %}onclick="openModal('modal-rework-qc')"{% else %}disabled{% endif %}>
     <div class="metric-label">Rework QC</div>
     <div class="metric-value">{{ summary.rework_qc }}</div>
     <div class="metric-note">Jumlah garment unik yang pernah rework</div>
-  </div>
+  </button>
 
-  <div class="metric-card">
+  <button type="button" class="metric-card metric-button {% if summary.wira_qc == 0 %}metric-disabled{% endif %}"
+  {% if summary.wira_qc > 0 %}onclick="openModal('modal-wira-qc')"{% else %}disabled{% endif %}>
     <div class="metric-label">WIRA QC</div>
     <div class="metric-value">{{ summary.wira_qc }}</div>
     <div class="metric-note">Rework yang belum dieksekusi good / reject</div>
-  </div>
+  </button>
 
-  <div class="metric-card">
+  <button type="button" class="metric-card metric-button {% if summary.good_qc == 0 %}metric-disabled{% endif %}"
+  {% if summary.good_qc > 0 %}onclick="openModal('modal-good-qc')"{% else %}disabled{% endif %}>
     <div class="metric-label">Good QC</div>
     <div class="metric-value">{{ summary.good_qc }}</div>
-  </div>
+  </button>
 
-  <div class="metric-card">
+  <button type="button" class="metric-card metric-button {% if summary.reject_pqc == 0 %}metric-disabled{% endif %}"
+  {% if summary.reject_pqc > 0 %}onclick="openModal('modal-reject-pqc')"{% else %}disabled{% endif %}>
     <div class="metric-label">Reject PQC</div>
     <div class="metric-value">{{ summary.reject_pqc }}</div>
-  </div>
+  </button>
 
-  <div class="metric-card">
+  <button type="button" class="metric-card metric-button {% if summary.rework_pqc == 0 %}metric-disabled{% endif %}"
+  {% if summary.rework_pqc > 0 %}onclick="openModal('modal-rework-pqc')"{% else %}disabled{% endif %}>
     <div class="metric-label">Rework PQC</div>
     <div class="metric-value">{{ summary.rework_pqc }}</div>
     <div class="metric-note">Jumlah garment unik yang pernah rework</div>
-  </div>
+  </button>
 
-  <div class="metric-card">
+  <button type="button" class="metric-card metric-button {% if summary.wira_pqc == 0 %}metric-disabled{% endif %}"
+  {% if summary.wira_pqc > 0 %}onclick="openModal('modal-wira-pqc')"{% else %}disabled{% endif %}>
     <div class="metric-label">WIRA PQC</div>
     <div class="metric-value">{{ summary.wira_pqc }}</div>
     <div class="metric-note">Rework yang belum dieksekusi good / reject</div>
-  </div>
+  </button>
 
-  <div class="metric-card">
+  <button type="button" class="metric-card metric-button {% if summary.good_pqc == 0 %}metric-disabled{% endif %}"
+  {% if summary.good_pqc > 0 %}onclick="openModal('modal-good-pqc')"{% else %}disabled{% endif %}>
     <div class="metric-label">Good PQC</div>
     <div class="metric-value">{{ summary.good_pqc }}</div>
-  </div>
+  </button>
 </div>
+
+<!-- MODALS -->
+{% include "tracking/partials/metric_modals.html" with modal_id="modal-sewing-output" title="Detail Sewing Output" rows=detail_data.sewing_output %}
+{% include "tracking/partials/metric_modals.html" with modal_id="modal-reject-qc" title="Detail Reject QC" rows=detail_data.reject_qc %}
+{% include "tracking/partials/metric_modals.html" with modal_id="modal-rework-qc" title="Detail Rework QC" rows=detail_data.rework_qc %}
+{% include "tracking/partials/metric_modals.html" with modal_id="modal-wira-qc" title="Detail WIRA QC" rows=detail_data.wira_qc %}
+{% include "tracking/partials/metric_modals.html" with modal_id="modal-good-qc" title="Detail Good QC" rows=detail_data.good_qc %}
+{% include "tracking/partials/metric_modals.html" with modal_id="modal-reject-pqc" title="Detail Reject PQC" rows=detail_data.reject_pqc %}
+{% include "tracking/partials/metric_modals.html" with modal_id="modal-rework-pqc" title="Detail Rework PQC" rows=detail_data.rework_pqc %}
+{% include "tracking/partials/metric_modals.html" with modal_id="modal-wira-pqc" title="Detail WIRA PQC" rows=detail_data.wira_pqc %}
+{% include "tracking/partials/metric_modals.html" with modal_id="modal-good-pqc" title="Detail Good PQC" rows=detail_data.good_pqc %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function openModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) {
+      modal.classList.add("show");
+      document.body.classList.add("modal-open");
+    }
+  }
+
+  function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) {
+      modal.classList.remove("show");
+      document.body.classList.remove("modal-open");
+    }
+  }
+
+  document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("modal-overlay")) {
+      e.target.classList.remove("show");
+      document.body.classList.remove("modal-open");
+    }
+  });
+</script>
 {% endblock %}

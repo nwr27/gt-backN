@@ -171,7 +171,6 @@ def line_overview_page(request):
     context = {"lines": lines}
     return render(request, "tracking/line_overview.html", context)
 
-
 @login_required
 def line_detail_page(request, line):
     garments = Garment.objects.filter(line=line)
@@ -188,8 +187,34 @@ def line_detail_page(request, line):
         wira_pqc=Count("id_garment", filter=Q(pqc_rework__gt=0) & Q(pqc_good=0) & Q(pqc_reject=0)),
     )
 
+    detail_fields = [
+        "rfid_garment",
+        "rfid_iron",
+        "rfid_qc",
+        "rfid_pqc",
+        "item",
+        "buyer",
+        "style",
+        "wo",
+        "color",
+        "size",
+    ]
+
+    detail_data = {
+        "sewing_output": list(garments.filter(output__gt=0).values(*detail_fields).order_by("rfid_garment")),
+        "reject_qc": list(garments.filter(qc_reject__gt=0).values(*detail_fields).order_by("rfid_garment")),
+        "rework_qc": list(garments.filter(qc_rework__gt=0).values(*detail_fields).order_by("rfid_garment")),
+        "wira_qc": list(garments.filter(qc_rework__gt=0, qc_good=0, qc_reject=0).values(*detail_fields).order_by("rfid_garment")),
+        "good_qc": list(garments.filter(qc_good__gt=0).values(*detail_fields).order_by("rfid_garment")),
+        "reject_pqc": list(garments.filter(pqc_reject__gt=0).values(*detail_fields).order_by("rfid_garment")),
+        "rework_pqc": list(garments.filter(pqc_rework__gt=0).values(*detail_fields).order_by("rfid_garment")),
+        "wira_pqc": list(garments.filter(pqc_rework__gt=0, pqc_good=0, pqc_reject=0).values(*detail_fields).order_by("rfid_garment")),
+        "good_pqc": list(garments.filter(pqc_good__gt=0).values(*detail_fields).order_by("rfid_garment")),
+    }
+
     context = {
         "line": line,
         "summary": summary,
+        "detail_data": detail_data,
     }
     return render(request, "tracking/line_detail.html", context)

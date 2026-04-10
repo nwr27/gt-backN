@@ -221,3 +221,72 @@ def folding_checkout_api(request):
             "folding_co_time": garment.folding_co_time,
         }
     )
+
+
+@api_view(["GET"])
+@permission_classes([HasAPIKey])
+def get_lines_overview_api(request):
+    lines = (
+        Garment.objects.exclude(line__isnull=True)
+        .exclude(line__exact="")
+        .values("line")
+        .annotate(
+            sewing_output=Count("id_garment", filter=Q(output__gt=0)),
+            good_qc=Count("id_garment", filter=Q(qc_good__gt=0)),
+            reject_qc=Count("id_garment", filter=Q(qc_reject__gt=0)),
+            rework_qc=Count("id_garment", filter=Q(qc_rework__gt=0)),
+            wira_qc=Count("id_garment", filter=Q(qc_rework__gt=0) & Q(qc_good=0) & Q(qc_reject=0)),
+            good_pqc=Count("id_garment", filter=Q(pqc_good__gt=0)),
+            reject_pqc=Count("id_garment", filter=Q(pqc_reject__gt=0)),
+            rework_pqc=Count("id_garment", filter=Q(pqc_rework__gt=0)),
+            wira_pqc=Count("id_garment", filter=Q(pqc_rework__gt=0) & Q(pqc_good=0) & Q(pqc_reject=0)),
+        )
+        .order_by("line")
+    )
+
+    return Response({"success": True, "count": len(lines), "data": list(lines)})
+
+
+@api_view(["GET"])
+@permission_classes([HasAPIKey])
+def get_line_detail_api(request, line):
+    garments = Garment.objects.filter(line=line)
+
+    summary = garments.aggregate(
+        sewing_output=Count("id_garment", filter=Q(output__gt=0)),
+        good_qc=Count("id_garment", filter=Q(qc_good__gt=0)),
+        reject_qc=Count("id_garment", filter=Q(qc_reject__gt=0)),
+        rework_qc=Count("id_garment", filter=Q(qc_rework__gt=0)),
+        wira_qc=Count("id_garment", filter=Q(qc_rework__gt=0) & Q(qc_good=0) & Q(qc_reject=0)),
+        good_pqc=Count("id_garment", filter=Q(pqc_good__gt=0)),
+        reject_pqc=Count("id_garment", filter=Q(pqc_reject__gt=0)),
+        rework_pqc=Count("id_garment", filter=Q(pqc_rework__gt=0)),
+        wira_pqc=Count("id_garment", filter=Q(pqc_rework__gt=0) & Q(pqc_good=0) & Q(pqc_reject=0)),
+    )
+
+    detail_fields = [
+        "rfid_garment",
+        "rfid_iron",
+        "rfid_qc",
+        "rfid_pqc",
+        "item",
+        "buyer",
+        "style",
+        "wo",
+        "color",
+        "size",
+    ]
+
+    detail_data = {
+        "sewing_output": list(garments.filter(output__gt=0).values(*detail_fields).order_by("rfid_garment")),
+        "reject_qc": list(garments.filter(qc_reject__gt=0).values(*detail_fields).order_by("rfid_garment")),
+        "rework_qc": list(garments.filter(qc_rework__gt=0).values(*detail_fields).order_by("rfid_garment")),
+        "wira_qc": list(garments.filter(qc_rework__gt=0, qc_good=0, qc_reject=0).values(*detail_fields).order_by("rfid_garment")),
+        "good_qc": list(garments.filter(qc_good__gt=0).values(*detail_fields).order_by("rfid_garment")),
+        "reject_pqc": list(garments.filter(pqc_reject__gt=0).values(*detail_fields).order_by("rfid_garment")),
+        "rework_pqc": list(garments.filter(pqc_rework__gt=0).values(*detail_fields).order_by("rfid_garment")),
+        "wira_pqc": list(garments.filter(pqc_rework__gt=0, pqc_good=0, pqc_reject=0).values(*detail_fields).order_by("rfid_garment")),
+        "good_pqc": list(garments.filter(pqc_good__gt=0).values(*detail_fields).order_by("rfid_garment")),
+    }
+
+    return Response({"success": True, "line": line, "summary": summary, "detail_data": detail_data})

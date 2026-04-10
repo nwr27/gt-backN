@@ -20,4 +20,7 @@ urlpatterns = [
     
     path("api/folding/checkin/", api_views.folding_checkin_api, name="folding_checkin_api"),
     path("api/folding/checkout/", api_views.folding_checkout_api, name="folding_checkout_api"),
+
+    path("api/lines/", api_views.get_lines_overview_api, name="api_lines_overview"),
+    path("api/lines/<str:line>/", api_views.get_line_detail_api, name="api_line_detail"),
 ]

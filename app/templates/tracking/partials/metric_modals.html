@@ -1,0 +1,49 @@
+<div id="{{ modal_id }}" class="modal-overlay">
+  <div class="modal-box modal-lg">
+    <div class="modal-head">
+      <h3>{{ title }}</h3>
+      <button type="button" class="modal-close" onclick="closeModal('{{ modal_id }}')">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>RFID Garment</th>
+              <th>RFID Iron</th>
+              <th>RFID QC</th>
+              <th>RFID PQC</th>
+              <th>Item</th>
+              <th>Buyer</th>
+              <th>Style</th>
+              <th>WO</th>
+              <th>Color</th>
+              <th>Size</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in rows %}
+            <tr>
+              <td>{{ row.rfid_garment }}</td>
+              <td>{{ row.rfid_iron|default:"-" }}</td>
+              <td>{{ row.rfid_qc|default:"-" }}</td>
+              <td>{{ row.rfid_pqc|default:"-" }}</td>
+              <td>{{ row.item }}</td>
+              <td>{{ row.buyer }}</td>
+              <td>{{ row.style }}</td>
+              <td>{{ row.wo }}</td>
+              <td>{{ row.color }}</td>
+              <td>{{ row.size }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="10">Tidak ada data.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
