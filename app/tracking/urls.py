@@ -3,6 +3,7 @@ from . import views
 from . import api_views
 
 urlpatterns = [
+    # Define page routes
     path("waiting-dryroom/", views.waiting_dryroom_page, name="waiting_dryroom_page"),
     path("waiting-folding/", views.waiting_folding_page, name="waiting_folding_page"),
     
@@ -12,6 +13,7 @@ urlpatterns = [
     path("lines/", views.line_overview_page, name="line_overview_page"),
     path("lines/<str:line>/", views.line_detail_page, name="line_detail_page"),
     
+    # Define API endpoints
     path("api/waiting-dryroom/", api_views.get_garment_waiting_dryroom, name="api_waiting_dryroom"),
     path("api/waiting-folding/", api_views.get_garment_waiting_folding, name="api_waiting_folding"),
     
